@@ -27,9 +27,13 @@ button { font: inherit; }
 .theme-toggle img { width: 52px; height: 52px; }
 body[data-theme="dark"] .theme-toggle img, body[data-theme="dark"] .pill img { filter: invert(1); }
 
-.hero { width: 640px; margin: 0 auto; }
+.hero { --hero-word-duration: 9.75s; --hero-word-easing: cubic-bezier(.76, 0, .24, 1); width: 640px; margin: 0 auto; }
 .hero h1, .hero > p { margin: 0; font-size: 96px; font-weight: 600; line-height: 1.1; }
 .hero h1 { padding: 40px 0 30px; }
+.hero-design-line { display: inline-flex; align-items: flex-start; height: 1.1em; vertical-align: top; white-space: nowrap; }
+.hero-word-window { display: block; flex: 0 0 3.2em; height: 1.36em; margin-left: .12em; overflow: hidden; line-height: 1.1; }
+.hero-word-track { display: block; height: 5.44em; line-height: 1.1; will-change: transform; animation: hero-word-roll var(--hero-word-duration) var(--hero-word-easing) infinite; }
+.hero-word-track > span { display: block; height: 1.36em; line-height: 1.1; white-space: nowrap; }
 .asset-placeholder { position: relative; width: 100%; height: 225px; overflow: hidden; background: #d1e3f0; isolation: isolate; }
 .asset-placeholder__track { display: none; }
 .hero-laptop__shadow { position: absolute; z-index: 0; display: block; bottom: -18px; left: 50%; width: 734px; max-width: none; opacity: .32; transform: translateX(-50%); }
@@ -229,10 +233,17 @@ body[data-theme="light"] .projects-carousel-shell .project-carousel-control[data
 }
 
 @keyframes brand-marquee { to { transform: translateX(-50%); } }
+@keyframes hero-word-roll {
+  0%, 25.641% { transform: translateY(0); }
+  33.333%, 58.974% { transform: translateY(-25%); }
+  66.667%, 92.308% { transform: translateY(-50%); }
+  100% { transform: translateY(-75%); }
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .brand-track { animation: none; }
+  .hero-word-track { animation: none; }
   .project-media img { transition: none; }
   .project-card:hover .project-media img, .project-card:focus-within .project-media img { transform: translate3d(-50%, 0, 0) scale(1); }
 }
