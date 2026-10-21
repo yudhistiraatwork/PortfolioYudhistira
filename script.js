@@ -1,23 +1,172 @@
-const root=document.body,toggle=document.querySelector('.theme-toggle'),toggleIcon=toggle.querySelector('img'),assets=document.querySelectorAll('.theme-asset');
-function setTheme(theme){const dark=theme==='dark';root.dataset.theme=theme;toggle.setAttribute('aria-pressed',String(!dark));toggle.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');toggleIcon.src=dark?'Assets/Icons/moon-fill.svg':'Assets/Icons/sun-fill.svg';assets.forEach(asset=>{asset.src=dark?asset.dataset.light:asset.dataset.dark});localStorage.setItem('portfolio-theme',theme)}
-setTheme(localStorage.getItem('portfolio-theme')||'dark');toggle.addEventListener('click',()=>setTheme(root.dataset.theme==='dark'?'light':'dark'));
-const hero=document.querySelector('.hero');if(hero){const heroImages=[...hero.querySelectorAll('.asset-placeholder__track img')],waitForHeroImages=heroImages.map(image=>image.complete?Promise.resolve():new Promise(resolve=>{image.addEventListener('load',resolve,{once:true});image.addEventListener('error',resolve,{once:true})}));Promise.all(waitForHeroImages).then(()=>requestAnimationFrame(()=>hero.classList.add('hero--carousel-ready')))}
-const time=document.querySelector('#jakarta-time');function updateTime(){time.textContent=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Jakarta',hour:'numeric',minute:'2-digit',second:'2-digit',hour12:true}).format(new Date()).toLowerCase()}updateTime();setInterval(updateTime,1000);
-const mobileCarousels=window.matchMedia('(max-width: 640px)'),reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
-function createMobileCarousel({container,controls,cardSelector,directionAttribute,indicatorSelector}){if(!container||!controls)return;const cards=[...container.querySelectorAll(cardSelector)],previous=controls.querySelector(`[${directionAttribute}="previous"]`),next=controls.querySelector(`[${directionAttribute}="next"]`),indicator=controls.querySelector(indicatorSelector);let scrollFrame,loopTimer,leadingClone,trailingClone,clonesInstalled=false;
-const slideWidth=()=>container.clientWidth;
-const rawSlide=()=>Math.round(container.scrollLeft/slideWidth());
-const activeSlide=()=>{const raw=rawSlide();if(!clonesInstalled)return Math.max(0,Math.min(cards.length-1,raw));if(raw===0)return cards.length-1;if(raw===cards.length+1)return 0;return Math.max(0,Math.min(cards.length-1,raw-1))};
-const jumpTo=position=>{container.style.scrollBehavior='auto';container.scrollLeft=position;requestAnimationFrame(()=>{container.style.scrollBehavior=''})};
-const prepareClone=card=>{const clone=card.cloneNode(true);clone.classList.add('carousel-card--clone');clone.setAttribute('aria-hidden','true');clone.querySelectorAll('a, button').forEach(element=>element.tabIndex=-1);return clone};
-const updateControls=()=>{const index=activeSlide();indicator.textContent=`${index+1} of ${cards.length}`;if(mobileCarousels.matches)container.style.height=`${cards[index].offsetHeight}px`;else container.style.height=''};
-const installClones=()=>{if(clonesInstalled)return;leadingClone=prepareClone(cards[cards.length-1]);trailingClone=prepareClone(cards[0]);container.prepend(leadingClone);container.append(trailingClone);clonesInstalled=true;requestAnimationFrame(()=>{jumpTo(slideWidth());updateControls()})};
-const removeClones=()=>{if(!clonesInstalled)return;leadingClone.remove();trailingClone.remove();clonesInstalled=false;jumpTo(0)};
-const normalizeLoop=()=>{if(!clonesInstalled||!mobileCarousels.matches)return;const raw=rawSlide();if(raw===0)jumpTo(cards.length*slideWidth());if(raw===cards.length+1)jumpTo(slideWidth());updateControls()};
-const move=direction=>{if(!mobileCarousels.matches)return;container.scrollTo({left:(rawSlide()+direction)*slideWidth(),behavior:reducedMotion.matches?'auto':'smooth'})};
-previous.addEventListener('click',()=>move(-1));next.addEventListener('click',()=>move(1));
-container.addEventListener('scroll',()=>{cancelAnimationFrame(scrollFrame);scrollFrame=requestAnimationFrame(updateControls);clearTimeout(loopTimer);loopTimer=setTimeout(normalizeLoop,140)},{passive:true});
-container.addEventListener('scrollend',normalizeLoop);mobileCarousels.addEventListener('change',()=>{if(mobileCarousels.matches)installClones();else removeClones();updateControls()});window.addEventListener('resize',updateControls);if(mobileCarousels.matches)installClones();updateControls()}
-createMobileCarousel({container:document.querySelector('#project-carousel'),controls:document.querySelector('.projects-section > .project-carousel-controls'),cardSelector:'.project-card',directionAttribute:'data-project-direction',indicatorSelector:'.project-carousel-indicator'});
-createMobileCarousel({container:document.querySelector('.value-grid'),controls:document.querySelector('.value-carousel-controls'),cardSelector:'.value-card',directionAttribute:'data-value-direction',indicatorSelector:'.value-carousel-indicator'});
+const root = document.body;
+const toggle = document.querySelector('.theme-toggle');
+const toggleIcon = toggle.querySelector('img');
+const themeAssets = document.querySelectorAll('.theme-asset');
 
+function setTheme(theme) {
+  const isDark = theme === 'dark';
+  root.dataset.theme = theme;
+  toggle.setAttribute('aria-pressed', String(!isDark));
+  toggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+  toggleIcon.src = isDark ? 'Assets/Icons/moon-fill.svg' : 'Assets/Icons/sun-fill.svg';
+  themeAssets.forEach(asset => { asset.src = isDark ? asset.dataset.light : asset.dataset.dark; });
+  localStorage.setItem('portfolio-theme', theme);
+}
+
+setTheme(localStorage.getItem('portfolio-theme') || 'dark');
+toggle.addEventListener('click', () => setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
+
+const time = document.querySelector('#jakarta-time');
+function updateTime() {
+  time.textContent = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Jakarta',
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  }).format(new Date()).toLowerCase();
+}
+updateTime();
+setInterval(updateTime, 1000);
+
+const mobileViewport = window.matchMedia('(max-width: 640px)');
+const tabletViewport = window.matchMedia('(max-width: 900px)');
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+function createCarousel({ container, controls, cardSelector, directionAttribute, indicatorSelector, isEnabled, pageSize }) {
+  if (!container || !controls) return;
+
+  const cards = [...container.querySelectorAll(cardSelector)];
+  const previous = controls.querySelector(`[${directionAttribute}="previous"]`);
+  const next = controls.querySelector(`[${directionAttribute}="next"]`);
+  const indicator = controls.querySelector(indicatorSelector);
+  let leadingClones = [];
+  let trailingClones = [];
+  let clonesInstalled = false;
+  let installedPageSize = 0;
+  let scrollFrame;
+  let loopTimer;
+
+  const visiblePageSize = () => pageSize();
+  const pageCount = () => Math.ceil(cards.length / visiblePageSize());
+  const pageWidth = () => container.clientWidth;
+  const rawPage = () => Math.round(container.scrollLeft / Math.max(1, pageWidth()));
+
+  const activeIndex = () => {
+    const size = visiblePageSize();
+    const raw = rawPage();
+    if (!clonesInstalled) return Math.max(0, Math.min(cards.length - 1, raw * size));
+    if (raw === 0) return cards.length - size;
+    if (raw >= pageCount() + 1) return 0;
+    return Math.max(0, Math.min(cards.length - 1, (raw - 1) * size));
+  };
+
+  const jumpTo = position => {
+    container.style.scrollBehavior = 'auto';
+    container.scrollLeft = position;
+    requestAnimationFrame(() => { container.style.scrollBehavior = ''; });
+  };
+
+  const prepareClone = card => {
+    const clone = card.cloneNode(true);
+    clone.classList.add('carousel-card--clone');
+    clone.setAttribute('aria-hidden', 'true');
+    clone.querySelectorAll('a, button').forEach(element => { element.tabIndex = -1; });
+    return clone;
+  };
+
+  const updateControls = () => {
+    const index = activeIndex();
+    if (indicator) indicator.textContent = `${index + 1} of ${cards.length}`;
+    if (mobileViewport.matches && isEnabled()) container.style.height = `${cards[index].offsetHeight}px`;
+    else container.style.height = '';
+  };
+
+  const removeClones = () => {
+    if (!clonesInstalled) return;
+    [...leadingClones, ...trailingClones].forEach(clone => clone.remove());
+    leadingClones = [];
+    trailingClones = [];
+    clonesInstalled = false;
+    installedPageSize = 0;
+    container.scrollLeft = 0;
+  };
+
+  const installClones = () => {
+    const size = visiblePageSize();
+    leadingClones = cards.slice(-size).map(prepareClone);
+    trailingClones = cards.slice(0, size).map(prepareClone);
+    container.prepend(...leadingClones);
+    container.append(...trailingClones);
+    clonesInstalled = true;
+    installedPageSize = size;
+    requestAnimationFrame(() => {
+      jumpTo(pageWidth());
+      updateControls();
+    });
+  };
+
+  const syncCarousel = () => {
+    if (!isEnabled()) {
+      removeClones();
+      updateControls();
+      return;
+    }
+    if (clonesInstalled && installedPageSize === visiblePageSize()) {
+      updateControls();
+      return;
+    }
+    removeClones();
+    installClones();
+  };
+
+  const normalizeLoop = () => {
+    if (!clonesInstalled || !isEnabled()) return;
+    const raw = rawPage();
+    if (raw === 0) jumpTo(pageCount() * pageWidth());
+    if (raw >= pageCount() + 1) jumpTo(pageWidth());
+    updateControls();
+  };
+
+  const move = direction => {
+    if (!isEnabled()) return;
+    container.scrollTo({
+      left: (rawPage() + direction) * pageWidth(),
+      behavior: reducedMotion.matches ? 'auto' : 'smooth'
+    });
+  };
+
+  previous.addEventListener('click', () => move(-1));
+  next.addEventListener('click', () => move(1));
+  container.addEventListener('scroll', () => {
+    cancelAnimationFrame(scrollFrame);
+    scrollFrame = requestAnimationFrame(updateControls);
+    clearTimeout(loopTimer);
+    loopTimer = setTimeout(normalizeLoop, 180);
+  }, { passive: true });
+  container.addEventListener('scrollend', normalizeLoop);
+  window.addEventListener('resize', syncCarousel);
+  mobileViewport.addEventListener('change', syncCarousel);
+  tabletViewport.addEventListener('change', syncCarousel);
+  syncCarousel();
+}
+
+createCarousel({
+  container: document.querySelector('#project-carousel'),
+  controls: document.querySelector('.projects-carousel-shell > .project-carousel-controls'),
+  cardSelector: '.project-card',
+  directionAttribute: 'data-project-direction',
+  indicatorSelector: '.project-carousel-indicator',
+  isEnabled: () => true,
+  pageSize: () => mobileViewport.matches ? 1 : tabletViewport.matches ? 2 : 3
+});
+
+createCarousel({
+  container: document.querySelector('.value-grid'),
+  controls: document.querySelector('.value-carousel-controls'),
+  cardSelector: '.value-card',
+  directionAttribute: 'data-value-direction',
+  indicatorSelector: '.value-carousel-indicator',
+  isEnabled: () => mobileViewport.matches,
+  pageSize: () => 1
+});
