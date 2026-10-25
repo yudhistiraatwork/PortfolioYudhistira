@@ -45,6 +45,10 @@ button {
   display: none;
 }
 
+.mobile-sidebar {
+  display: none;
+}
+
 .split-section, .value-section, .feature-section, .brands, .projects-section, .contact {
   width: 100%;
   max-width: 100%;
@@ -673,6 +677,108 @@ body[data-theme="light"] .projects-carousel-shell .project-carousel-control[data
   white-space: nowrap;
 }
 
+/* Placeholder pages */
+.placeholder-hero {
+  width: 640px;
+  max-width: calc(100% - 40px);
+  margin: 0 auto;
+  padding: 80px 0;
+  text-align: center;
+}
+
+.placeholder-hero__visual {
+  display: grid;
+  width: 240px;
+  height: 240px;
+  margin: 0 auto;
+  place-items: center;
+}
+
+.placeholder-hourglass {
+  width: 101px;
+  height: 200px;
+  max-width: none;
+}
+
+.placeholder-hero h1 {
+  margin: 40px 0 20px;
+  font-size: 44px;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -.036em;
+}
+
+.placeholder-hero p {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.placeholder-contact-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+}
+
+.placeholder-contact-option {
+  min-height: 488px;
+  display: flex;
+  flex-direction: column;
+  padding: 80px 40px;
+}
+
+.placeholder-contact-option + .placeholder-contact-option {
+  border-left: 1px solid var(--line);
+}
+
+.placeholder-contact-option__icon {
+  width: 72px;
+  height: 72px;
+  margin-bottom: 20px;
+  object-fit: contain;
+}
+
+.placeholder-contact-option h2 {
+  margin: 0 0 20px;
+  font-size: 44px;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -.036em;
+}
+
+.placeholder-contact-option p {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.5;
+}
+
+.placeholder-contact-option .pill {
+  width: fit-content;
+  height: 64px;
+  min-height: 64px;
+  margin-top: 40px;
+  padding: 0 24px;
+  font-size: 28px;
+}
+
+.placeholder-contact-option .pill img {
+  width: 24px;
+  height: 24px;
+}
+
+body[data-theme="dark"] .placeholder-contact-option__icon {
+  filter: invert(1);
+}
+
+body[data-theme="dark"] .placeholder-hourglass {
+  filter: none;
+}
+
+body[data-theme="light"] .placeholder-hourglass {
+  filter: invert(1);
+}
+
 @media (max-width: 900px) and (min-width: 641px) {
   .header {
     padding: 56px 40px 32px;
@@ -855,6 +961,180 @@ body[data-theme="light"] .projects-carousel-shell .project-carousel-control[data
     height: 24px;
   }
 
+  .mobile-sidebar {
+    position: fixed;
+    z-index: 20;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    background: var(--bg);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .2s ease, visibility 0s linear .2s;
+  }
+
+  .mobile-sidebar.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity .2s ease;
+  }
+
+  body.menu-open {
+    overflow: hidden;
+  }
+
+  .mobile-sidebar__topbar {
+    min-height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+  }
+
+  .mobile-sidebar__name {
+    color: var(--ink);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.2;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .mobile-sidebar__actions {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .menu-close {
+    display: grid;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    place-items: center;
+    border: 0;
+    border-radius: 999px;
+    background: #2a2a2a;
+    box-shadow: 0 4px 12px rgb(0 0 0 / .24);
+    cursor: pointer;
+  }
+
+  .menu-close img {
+    width: 24px;
+    height: 24px;
+  }
+
+  body[data-theme="dark"] .menu-close img {
+    filter: invert(1);
+  }
+
+  .mobile-sidebar__nav {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+  }
+
+  .mobile-sidebar__nav p {
+    margin: 0 0 8px;
+    color: #b7b7b7;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.3;
+  }
+
+  .mobile-sidebar__nav a {
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    color: var(--ink);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.5;
+    text-decoration: none;
+  }
+
+  body[data-theme="light"] .menu-close {
+    background: #fff;
+    box-shadow: 0 4px 12px rgb(42 42 42 / .16);
+  }
+
+  .placeholder-hero {
+    width: auto;
+    max-width: none;
+    margin: 0 20px;
+    padding: 40px 0;
+  }
+
+  .placeholder-hero__visual {
+    width: 100%;
+    height: 320px;
+  }
+
+  .placeholder-hourglass {
+    width: 101px;
+    height: 200px;
+  }
+
+  .placeholder-hero h1 {
+    margin: 20px 0;
+    font-size: 32px;
+    line-height: 1.1;
+  }
+
+  .placeholder-hero p {
+    font-size: 22px;
+    line-height: 1.5;
+  }
+
+  .placeholder-contact-options {
+    display: block;
+  }
+
+  .placeholder-contact-option {
+    min-height: 0;
+    padding: 40px 20px;
+  }
+
+  .placeholder-contact-option + .placeholder-contact-option {
+    border-top: 1px solid var(--line);
+    border-left: 0;
+  }
+
+  .placeholder-contact-option__icon {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 20px;
+  }
+
+  .placeholder-contact-option h2 {
+    margin-bottom: 20px;
+    font-size: 32px;
+    line-height: 1.1;
+  }
+
+  .placeholder-contact-option p {
+    font-size: 22px;
+    line-height: 1.5;
+  }
+
+  .placeholder-contact-option .pill {
+    width: 100%;
+    height: 48px;
+    min-height: 48px;
+    justify-content: center;
+    margin-top: 40px;
+    padding: 0 20px;
+    font-size: 20px;
+  }
+
   body[data-theme="light"] .menu-toggle {
     background: #fff;
     box-shadow: 0 4px 12px rgb(42 42 42 / .16);
@@ -1026,6 +1306,7 @@ body[data-theme="light"] .projects-carousel-shell .project-carousel-control[data
   .feature-section--skills {
     display: flex;
     flex-direction: column;
+    gap: 0;
   }
 
   .feature-section--skills .feature-content {

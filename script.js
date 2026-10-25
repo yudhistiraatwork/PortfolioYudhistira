@@ -1,20 +1,23 @@
 const root = document.body;
-const toggle = document.querySelector('.theme-toggle');
-const toggleIcon = toggle.querySelector('img');
+const themeToggles = [...document.querySelectorAll('.theme-toggle')];
 const themeAssets = document.querySelectorAll('.theme-asset');
 
 function setTheme(theme) {
   const isDark = theme === 'dark';
   root.dataset.theme = theme;
-  toggle.setAttribute('aria-pressed', String(!isDark));
-  toggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
-  toggleIcon.src = isDark ? 'Assets/Icons/moon-fill.svg' : 'Assets/Icons/sun-fill.svg';
+  themeToggles.forEach(toggle => {
+    toggle.setAttribute('aria-pressed', String(!isDark));
+    toggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+    toggle.querySelector('img').src = isDark ? 'Assets/Icons/moon-fill.svg' : 'Assets/Icons/sun-fill.svg';
+  });
   themeAssets.forEach(asset => { asset.src = isDark ? asset.dataset.light : asset.dataset.dark; });
   localStorage.setItem('portfolio-theme', theme);
 }
 
 setTheme(localStorage.getItem('portfolio-theme') || 'dark');
-toggle.addEventListener('click', () => setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
+themeToggles.forEach(toggle => {
+  toggle.addEventListener('click', () => setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
+});
 
 const time = document.querySelector('#jakarta-time');
 function updateTime() {
@@ -32,6 +35,32 @@ setInterval(updateTime, 1000);
 const mobileViewport = window.matchMedia('(max-width: 640px)');
 const tabletViewport = window.matchMedia('(max-width: 900px)');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+const menuToggle = document.querySelector('.menu-toggle');
+const mobileMenu = document.querySelector('.mobile-sidebar');
+const menuClose = document.querySelector('.menu-close');
+
+function setMobileMenu(isOpen, { restoreFocus = false } = {}) {
+  if (!menuToggle || !mobileMenu) return;
+  mobileMenu.classList.toggle('is-open', isOpen);
+  mobileMenu.setAttribute('aria-hidden', String(!isOpen));
+  mobileMenu.inert = !isOpen;
+  menuToggle.setAttribute('aria-expanded', String(isOpen));
+  root.classList.toggle('menu-open', isOpen);
+
+  if (isOpen) menuClose?.focus();
+  else if (restoreFocus) menuToggle.focus();
+}
+
+menuToggle?.addEventListener('click', () => setMobileMenu(!mobileMenu?.classList.contains('is-open')));
+menuClose?.addEventListener('click', () => setMobileMenu(false, { restoreFocus: true }));
+mobileMenu?.querySelectorAll('a').forEach(link => link.addEventListener('click', () => setMobileMenu(false)));
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && mobileMenu?.classList.contains('is-open')) setMobileMenu(false, { restoreFocus: true });
+});
+mobileViewport.addEventListener('change', event => {
+  if (!event.matches) setMobileMenu(false);
+});
 
 function createCarousel({ container, controls, cardSelector, directionAttribute, indicatorSelector, isEnabled, pageSize }) {
   if (!container || !controls) return;
