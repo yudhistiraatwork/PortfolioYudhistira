@@ -8,7 +8,7 @@ function setTheme(theme) {
   themeToggles.forEach(toggle => {
     toggle.setAttribute('aria-pressed', String(!isDark));
     toggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
-    toggle.querySelector('img').src = isDark ? 'Assets/Icons/moon-fill.svg' : 'Assets/Icons/sun-fill.svg';
+    toggle.querySelector('img').src = isDark ? 'Assets/Icons/moon.svg' : 'Assets/Icons/sun-dim.svg';
   });
   themeAssets.forEach(asset => { asset.src = isDark ? asset.dataset.light : asset.dataset.dark; });
   localStorage.setItem('portfolio-theme', theme);
