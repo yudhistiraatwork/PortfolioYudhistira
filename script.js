@@ -36,6 +36,19 @@ const mobileViewport = window.matchMedia('(max-width: 640px)');
 const tabletViewport = window.matchMedia('(max-width: 900px)');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+const header = document.querySelector('.header');
+let headerScrollFrame;
+
+function syncHeaderScrollState() {
+  header?.classList.toggle('is-scrolled', window.scrollY > 0);
+}
+
+syncHeaderScrollState();
+window.addEventListener('scroll', () => {
+  cancelAnimationFrame(headerScrollFrame);
+  headerScrollFrame = requestAnimationFrame(syncHeaderScrollState);
+}, { passive: true });
+
 const menuToggle = document.querySelector('.menu-toggle');
 const mobileMenu = document.querySelector('.mobile-sidebar');
 const menuClose = document.querySelector('.menu-close');
