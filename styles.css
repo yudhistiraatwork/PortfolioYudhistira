@@ -772,26 +772,6 @@ body[data-theme="light"] .projects-carousel-shell .project-carousel-control[data
   height: 24px;
 }
 
-body[data-theme="dark"] .placeholder-contact-option__icon {
-  filter: invert(1);
-}
-
-body[data-theme="dark"] .placeholder-contact-option__icon--sketch {
-  filter: none;
-}
-
-body[data-theme="light"] .placeholder-contact-option__icon--sketch {
-  filter: invert(1);
-}
-
-body[data-theme="dark"] .placeholder-hourglass {
-  filter: none;
-}
-
-body[data-theme="light"] .placeholder-hourglass {
-  filter: invert(1);
-}
-
 @media (max-width: 900px) and (min-width: 641px) {
   .header {
     padding: 56px 40px 32px;

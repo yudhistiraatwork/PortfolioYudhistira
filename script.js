@@ -8,9 +8,9 @@ function setTheme(theme) {
   themeToggles.forEach(toggle => {
     toggle.setAttribute('aria-pressed', String(!isDark));
     toggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
-    toggle.querySelector('img').src = isDark ? 'Assets/Icons/moon.svg' : 'Assets/Icons/sun-dim.svg';
+    toggle.querySelector('img').src = isDark ? 'Assets/Icons/sun-dim.svg' : 'Assets/Icons/moon.svg';
   });
-  themeAssets.forEach(asset => { asset.src = isDark ? asset.dataset.light : asset.dataset.dark; });
+  themeAssets.forEach(asset => { asset.src = isDark ? asset.dataset.dark : asset.dataset.light; });
   localStorage.setItem('portfolio-theme', theme);
 }
 
