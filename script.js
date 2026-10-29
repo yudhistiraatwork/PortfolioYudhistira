@@ -1,6 +1,5 @@
 const root = document.body;
 const themeToggles = [...document.querySelectorAll('.theme-toggle')];
-const themeAssets = document.querySelectorAll('.theme-asset');
 
 function setTheme(theme) {
   const isDark = theme === 'dark';
@@ -10,7 +9,9 @@ function setTheme(theme) {
     toggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
     toggle.querySelector('img').src = isDark ? 'Assets/Icons/sun-dim.svg' : 'Assets/Icons/moon.svg';
   });
-  themeAssets.forEach(asset => { asset.src = isDark ? asset.dataset.dark : asset.dataset.light; });
+  document.querySelectorAll('.theme-asset').forEach(asset => {
+    asset.src = isDark ? asset.dataset.dark : asset.dataset.light;
+  });
   localStorage.setItem('portfolio-theme', theme);
 }
 
@@ -37,10 +38,12 @@ const tabletViewport = window.matchMedia('(max-width: 900px)');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 const header = document.querySelector('.header');
+const hero = document.querySelector('.hero');
 let headerScrollFrame;
 
 function syncHeaderScrollState() {
   header?.classList.toggle('is-scrolled', window.scrollY > 0);
+  header?.classList.toggle('is-past-hero', Boolean(hero && hero.getBoundingClientRect().bottom <= 0));
 }
 
 syncHeaderScrollState();
@@ -145,6 +148,11 @@ function createCarousel({ container, controls, cardSelector, directionAttribute,
     requestAnimationFrame(() => {
       jumpTo(pageWidth());
       updateControls();
+      window.setTimeout(() => {
+        if (!clonesInstalled || !isEnabled()) return;
+        jumpTo(pageWidth());
+        updateControls();
+      }, 250);
     });
   };
 
@@ -209,6 +217,16 @@ createCarousel({
   cardSelector: '.value-card',
   directionAttribute: 'data-value-direction',
   indicatorSelector: '.value-carousel-indicator',
+  isEnabled: () => mobileViewport.matches,
+  pageSize: () => 1
+});
+
+createCarousel({
+  container: document.querySelector('#about-experience-carousel'),
+  controls: document.querySelector('.about-experience-carousel-controls'),
+  cardSelector: '.about-experience-card',
+  directionAttribute: 'data-about-direction',
+  indicatorSelector: '.about-experience-carousel-indicator',
   isEnabled: () => mobileViewport.matches,
   pageSize: () => 1
 });
