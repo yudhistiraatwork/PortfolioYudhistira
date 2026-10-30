@@ -1387,9 +1387,13 @@ body[data-theme="light"] .bobo {
   }
 
   .mobile-sidebar__nav a {
+    align-self: stretch;
+    width: calc(100% + 40px);
     min-height: 60px;
     display: flex;
     align-items: center;
+    margin-inline: -20px;
+    padding-inline: 20px;
     color: var(--ink);
     font-size: 22px;
     font-weight: 400;
