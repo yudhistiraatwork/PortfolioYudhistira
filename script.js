@@ -211,7 +211,7 @@ createCarousel({
   directionAttribute: 'data-project-direction',
   indicatorSelector: '.project-carousel-indicator',
   isEnabled: () => true,
-  pageSize: () => mobileViewport.matches ? 1 : tabletViewport.matches ? 2 : 3
+  pageSize: () => mobileViewport.matches ? 1 : 2
 });
 
 createCarousel({
