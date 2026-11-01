@@ -37,20 +37,23 @@ const mobileViewport = window.matchMedia('(max-width: 640px)');
 const tabletViewport = window.matchMedia('(max-width: 900px)');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-const header = document.querySelector('.header');
-const hero = document.querySelector('.hero');
-let headerScrollFrame;
+const backToTop = document.querySelector('.back-to-top');
+let pageScrollFrame;
 
-function syncHeaderScrollState() {
-  header?.classList.toggle('is-scrolled', window.scrollY > 0);
-  header?.classList.toggle('is-past-hero', Boolean(hero && hero.getBoundingClientRect().bottom <= 0));
+function syncBackToTop() {
+  const distanceToPageEnd = document.documentElement.scrollHeight - (window.scrollY + window.innerHeight);
+  backToTop?.classList.toggle('is-visible', distanceToPageEnd <= 80);
 }
 
-syncHeaderScrollState();
+syncBackToTop();
 window.addEventListener('scroll', () => {
-  cancelAnimationFrame(headerScrollFrame);
-  headerScrollFrame = requestAnimationFrame(syncHeaderScrollState);
+  cancelAnimationFrame(pageScrollFrame);
+  pageScrollFrame = requestAnimationFrame(syncBackToTop);
 }, { passive: true });
+window.addEventListener('resize', syncBackToTop);
+backToTop?.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
+});
 
 const menuToggle = document.querySelector('.menu-toggle');
 const mobileMenu = document.querySelector('.mobile-sidebar');
