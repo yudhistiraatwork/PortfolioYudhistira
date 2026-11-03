@@ -370,22 +370,10 @@ h2, h3, p {
   font-size: 28px;
 }
 
-.pill:hover {
-  background: var(--ink);
-  color: var(--bg);
-}
-
 .pill img {
   width: 24px;
   height: 24px;
-}
-
-body[data-theme="dark"] .pill:hover img {
-  filter: none;
-}
-
-body[data-theme="light"] .pill:hover img {
-  filter: invert(1);
+  transition: filter .18s ease;
 }
 
 .value-intro, .projects-intro {
@@ -650,6 +638,7 @@ body[data-theme="light"] .bobo {
 .pill, .project-carousel-control, .back-to-top {
   --cta-radius: 12px;
   --cta-fill: var(--ink);
+  --cta-sweep-fill: var(--bg);
   isolation: isolate;
   border: 1px solid var(--ink);
   border-radius: var(--cta-radius);
@@ -692,17 +681,66 @@ body[data-theme="light"] .bobo {
   transition: fill .18s ease, stroke .18s ease;
 }
 
+.cta-frame .cta-sweep {
+  fill: var(--cta-sweep-fill);
+  opacity: 1;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path .48s cubic-bezier(.65, 0, .35, 1);
+}
+
 .pill {
   --cta-fill: var(--bg);
+  --cta-sweep-fill: var(--ink);
 }
 
-.pill:hover {
-  --cta-fill: var(--ink);
-  background: var(--cta-fill);
+.pill:hover .cta-sweep,
+.cta-sweep-active .cta-sweep {
+  clip-path: inset(0 0 0 0);
 }
 
-.pill.cta-framed:hover {
-  background: transparent;
+.pill:hover, .pill.cta-sweep-active {
+  color: var(--bg);
+  transition-delay: .24s;
+}
+
+.pill.cta-sweep-leaving {
+  color: var(--ink);
+  transition-delay: .24s;
+}
+
+body[data-theme="dark"] .pill:hover img, body[data-theme="dark"] .pill.cta-sweep-active img {
+  filter: none;
+  transition-delay: .24s;
+}
+
+body[data-theme="dark"] .pill.cta-sweep-leaving img {
+  filter: invert(1);
+  transition-delay: .24s;
+}
+
+body[data-theme="light"] .pill:hover img, body[data-theme="light"] .pill.cta-sweep-active img {
+  filter: invert(1);
+  transition-delay: .24s;
+}
+
+body[data-theme="light"] .pill.cta-sweep-leaving img {
+  filter: none;
+  transition-delay: .24s;
+}
+
+.cta-sweep-leaving .cta-sweep {
+  clip-path: inset(0 0 0 100%);
+}
+
+.cta-sweep-resetting .cta-sweep {
+  clip-path: inset(0 100% 0 0);
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-sweep {
+    transition: none;
+  }
 }
 
 @media (min-width: 641px) {

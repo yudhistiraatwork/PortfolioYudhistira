@@ -21,6 +21,7 @@ themeToggles.forEach(toggle => {
 });
 
 const ctaSelector = '.pill, .project-carousel-control, .back-to-top, .menu-toggle, .menu-close';
+const hoverSweepSelector = '.pill';
 const ctaSvgNamespace = 'http://www.w3.org/2000/svg';
 
 function createCtaFramePath(width, height) {
@@ -57,12 +58,15 @@ function createCtaFramePath(width, height) {
 
 function updateCtaFrame(element) {
   const frame = element.querySelector(':scope > .cta-frame');
-  const path = frame?.querySelector('path');
+  const path = frame?.querySelector('.cta-base-shape');
+  const sweep = frame?.querySelector('.cta-sweep');
   const bounds = element.getBoundingClientRect();
-  if (!frame || !path || !bounds.width || !bounds.height) return;
+  if (!frame || !path || !sweep || !bounds.width || !bounds.height) return;
 
+  const shapePath = createCtaFramePath(bounds.width, bounds.height);
   frame.setAttribute('viewBox', `0 0 ${bounds.width} ${bounds.height}`);
-  path.setAttribute('d', createCtaFramePath(bounds.width, bounds.height));
+  path.setAttribute('d', shapePath);
+  sweep.setAttribute('d', shapePath);
 }
 
 const ctaFrameObserver = 'ResizeObserver' in window
@@ -72,11 +76,15 @@ const ctaFrameObserver = 'ResizeObserver' in window
 document.querySelectorAll(ctaSelector).forEach(element => {
   const frame = document.createElementNS(ctaSvgNamespace, 'svg');
   const path = document.createElementNS(ctaSvgNamespace, 'path');
+  const sweep = document.createElementNS(ctaSvgNamespace, 'path');
+
   frame.classList.add('cta-frame');
   frame.setAttribute('aria-hidden', 'true');
   frame.setAttribute('focusable', 'false');
   frame.setAttribute('preserveAspectRatio', 'none');
-  frame.append(path);
+  path.classList.add('cta-base-shape');
+  sweep.classList.add('cta-sweep');
+  frame.append(path, sweep);
   element.prepend(frame);
   element.classList.add('cta-framed');
   updateCtaFrame(element);
@@ -86,6 +94,39 @@ document.querySelectorAll(ctaSelector).forEach(element => {
 if (!ctaFrameObserver) {
   window.addEventListener('resize', () => document.querySelectorAll(ctaSelector).forEach(updateCtaFrame));
 }
+
+document.querySelectorAll(hoverSweepSelector).forEach(element => {
+  const sweep = element.querySelector('.cta-sweep');
+  if (!sweep) return;
+
+  element.addEventListener('mouseenter', () => {
+    if (element.classList.contains('cta-sweep-leaving')) {
+      element.dataset.ctaSweepRestart = 'true';
+      return;
+    }
+    element.classList.add('cta-sweep-active');
+  });
+
+  element.addEventListener('mouseleave', () => {
+    element.dataset.ctaSweepRestart = 'false';
+    element.classList.remove('cta-sweep-active');
+    element.classList.add('cta-sweep-leaving');
+  });
+
+  sweep.addEventListener('transitionend', event => {
+    if (!['clip-path', '-webkit-clip-path'].includes(event.propertyName) || !element.classList.contains('cta-sweep-leaving')) return;
+
+    element.classList.remove('cta-sweep-leaving');
+    element.classList.add('cta-sweep-resetting');
+    requestAnimationFrame(() => {
+      element.classList.remove('cta-sweep-resetting');
+      if (element.dataset.ctaSweepRestart === 'true' && element.matches(':hover')) {
+        element.dataset.ctaSweepRestart = 'false';
+        element.classList.add('cta-sweep-active');
+      }
+    });
+  });
+});
 
 const time = document.querySelector('#jakarta-time');
 function updateTime() {
