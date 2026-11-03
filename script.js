@@ -20,6 +20,73 @@ themeToggles.forEach(toggle => {
   toggle.addEventListener('click', () => setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
 });
 
+const ctaSelector = '.pill, .project-carousel-control, .back-to-top, .menu-toggle, .menu-close';
+const ctaSvgNamespace = 'http://www.w3.org/2000/svg';
+
+function createCtaFramePath(width, height) {
+  const referenceSize = 40;
+  const referenceInset = .5;
+  const scale = (height - 1) / (referenceSize - 1);
+  const fromStart = value => referenceInset + (value - referenceInset) * scale;
+  const fromEnd = value => width - fromStart(referenceSize - value);
+  const vertical = value => referenceInset + (value - referenceInset) * scale;
+  const format = value => Number(value.toFixed(3));
+  const left = value => format(fromStart(value));
+  const right = value => format(fromEnd(value));
+  const y = value => format(vertical(value));
+
+  return [
+    `M${left(9.65723)} ${y(.5)}`,
+    `H${right(36)}`,
+    `C${right(37.933)} ${y(.5)} ${right(39.5)} ${y(2.067)} ${right(39.5)} ${y(4)}`,
+    `V${y(30.3428)}`,
+    `C${right(39.5)} ${y(31.213)} ${right(39.1761)} ${y(32.0503)} ${right(38.5947)} ${y(32.6924)}`,
+    `L${right(38.4746)} ${y(32.8184)}`,
+    `L${right(32.8184)} ${y(38.4746)}`,
+    `C${right(32.162)} ${y(39.131)} ${right(31.271)} ${y(39.5)} ${right(30.3428)} ${y(39.5)}`,
+    `H${left(4)}`,
+    `C${left(2.067)} ${y(39.5)} ${left(.5)} ${y(37.933)} ${left(.5)} ${y(36)}`,
+    `V${y(9.65723)}`,
+    `C${left(.5)} ${y(8.78699)} ${left(.823932)} ${y(7.94966)} ${left(1.40527)} ${y(7.30762)}`,
+    `L${left(1.52539)} ${y(7.18164)}`,
+    `L${left(7.18164)} ${y(1.52539)}`,
+    `C${left(7.79702)} ${y(.910009)} ${left(8.61829)} ${y(.546795)} ${left(9.4834)} ${y(.503906)}`,
+    `L${left(9.65723)} ${y(.5)}Z`
+  ].join('');
+}
+
+function updateCtaFrame(element) {
+  const frame = element.querySelector(':scope > .cta-frame');
+  const path = frame?.querySelector('path');
+  const bounds = element.getBoundingClientRect();
+  if (!frame || !path || !bounds.width || !bounds.height) return;
+
+  frame.setAttribute('viewBox', `0 0 ${bounds.width} ${bounds.height}`);
+  path.setAttribute('d', createCtaFramePath(bounds.width, bounds.height));
+}
+
+const ctaFrameObserver = 'ResizeObserver' in window
+  ? new ResizeObserver(entries => entries.forEach(entry => updateCtaFrame(entry.target)))
+  : null;
+
+document.querySelectorAll(ctaSelector).forEach(element => {
+  const frame = document.createElementNS(ctaSvgNamespace, 'svg');
+  const path = document.createElementNS(ctaSvgNamespace, 'path');
+  frame.classList.add('cta-frame');
+  frame.setAttribute('aria-hidden', 'true');
+  frame.setAttribute('focusable', 'false');
+  frame.setAttribute('preserveAspectRatio', 'none');
+  frame.append(path);
+  element.prepend(frame);
+  element.classList.add('cta-framed');
+  updateCtaFrame(element);
+  ctaFrameObserver?.observe(element);
+});
+
+if (!ctaFrameObserver) {
+  window.addEventListener('resize', () => document.querySelectorAll(ctaSelector).forEach(updateCtaFrame));
+}
+
 const time = document.querySelector('#jakarta-time');
 function updateTime() {
   time.textContent = new Intl.DateTimeFormat('en-GB', {

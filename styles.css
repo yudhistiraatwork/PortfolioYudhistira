@@ -564,7 +564,7 @@ body[data-theme="light"] .bobo {
   aspect-ratio: 4 / 3;
   margin: 0 0 32px;
   overflow: hidden;
-  border-radius: 0;
+  border-radius: 40px;
   background: #000;
   isolation: isolate;
 }
@@ -597,9 +597,9 @@ body[data-theme="light"] .bobo {
 .projects-carousel-shell > .project-carousel-controls {
   position: absolute;
   z-index: 2;
-  top: 258px;
-  right: 8px;
-  left: 8px;
+  top: calc(18.75vw - 22px);
+  right: 48px;
+  left: 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -635,6 +635,74 @@ body[data-theme="light"] .bobo {
 .project-carousel-control img {
   width: 32px;
   height: 32px;
+}
+
+.pill, .project-carousel-control {
+  position: relative;
+}
+
+.menu-toggle, .menu-close {
+  --cta-fill: #2a2a2a;
+  position: relative;
+  isolation: isolate;
+}
+
+.pill, .project-carousel-control, .back-to-top {
+  --cta-radius: 12px;
+  --cta-fill: var(--ink);
+  isolation: isolate;
+  border: 1px solid var(--ink);
+  border-radius: var(--cta-radius);
+  background: var(--cta-fill);
+}
+
+.pill.cta-framed, .project-carousel-control.cta-framed, .back-to-top.cta-framed {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.menu-toggle.cta-framed, .menu-close.cta-framed {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.menu-toggle.cta-framed .cta-frame, .menu-close.cta-framed .cta-frame {
+  filter: drop-shadow(0 4px 12px rgb(0 0 0 / .24));
+}
+
+.cta-frame {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.cta-frame path {
+  fill: var(--cta-fill);
+  stroke: var(--ink);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  transition: fill .18s ease, stroke .18s ease;
+}
+
+.pill {
+  --cta-fill: var(--bg);
+}
+
+.pill:hover {
+  --cta-fill: var(--ink);
+  background: var(--cta-fill);
+}
+
+.pill.cta-framed:hover {
+  background: transparent;
 }
 
 @media (min-width: 641px) {
@@ -1131,10 +1199,6 @@ body[data-theme="light"] .bobo {
     scroll-snap-align: start;
   }
 
-  .projects-carousel-shell > .project-carousel-controls {
-    top: 210px;
-  }
-
   .contact {
     padding-left: 40px;
     padding-right: 40%;
@@ -1212,9 +1276,6 @@ body[data-theme="light"] .bobo {
     scroll-snap-align: start;
   }
 
-  .projects-carousel-shell > .project-carousel-controls {
-    top: calc(18.75vw + 10px);
-  }
 }
 
 @media (max-width: 640px) {
@@ -1389,6 +1450,7 @@ body[data-theme="light"] .bobo {
   }
 
   body[data-theme="light"] .menu-close {
+    --cta-fill: #fff;
     background: #fff;
     box-shadow: 0 4px 12px rgb(42 42 42 / .16);
   }
@@ -1701,8 +1763,22 @@ body[data-theme="light"] .bobo {
   }
 
   body[data-theme="light"] .menu-toggle {
+    --cta-fill: #fff;
     background: #fff;
     box-shadow: 0 4px 12px rgb(42 42 42 / .16);
+  }
+
+  body[data-theme="light"] .menu-toggle.cta-framed, body[data-theme="light"] .menu-close.cta-framed {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  body[data-theme="light"] .menu-toggle.cta-framed .cta-frame, body[data-theme="light"] .menu-close.cta-framed .cta-frame {
+    filter: drop-shadow(0 4px 12px rgb(42 42 42 / .16));
+  }
+
+  .menu-toggle.cta-framed .cta-frame path, .menu-close.cta-framed .cta-frame path {
+    stroke: none;
   }
 
   body[data-theme="light"] .menu-toggle img {
@@ -2057,13 +2133,14 @@ body[data-theme="light"] .bobo {
   }
 
   .project-carousel-control {
+    --cta-fill: var(--bg);
     display: grid;
     width: 48px;
     height: 48px;
     padding: 0;
     place-items: center;
-    border: 1px solid var(--ink);
-    border-radius: 999px;
+    border: 0;
+    border-radius: 0;
     background: transparent;
     cursor: pointer;
     transform: none;
@@ -2079,7 +2156,7 @@ body[data-theme="light"] .bobo {
   }
 
   .project-carousel-control[data-project-direction="next"], .project-carousel-control[data-value-direction="next"], .project-carousel-control[data-about-direction="next"] {
-    background: var(--ink);
+    --cta-fill: var(--ink);
   }
 
   body[data-theme="dark"] .project-carousel-control[data-project-direction="previous"] img, body[data-theme="dark"] .project-carousel-control[data-value-direction="previous"] img, body[data-theme="dark"] .project-carousel-control[data-about-direction="previous"] img {
