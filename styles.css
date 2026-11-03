@@ -461,6 +461,20 @@ h2, h3, p {
   object-fit: cover;
 }
 
+.project-media, .outside-creative {
+  /* Legacy radius: --media-radius: 40px; */
+  --media-radius: 8px;
+  --media-notch: 40px;
+  border-radius: var(--media-radius);
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - var(--media-notch)),
+    calc(100% - var(--media-notch)) 100%,
+    0 100%
+  );
+}
+
 .feature-section--outside {
   min-height: 520px;
   padding: 80px 40px;
@@ -552,7 +566,7 @@ body[data-theme="light"] .bobo {
   aspect-ratio: 4 / 3;
   margin: 0 0 32px;
   overflow: hidden;
-  border-radius: 40px;
+  border-radius: var(--media-radius);
   background: #000;
   isolation: isolate;
 }
