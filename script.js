@@ -189,7 +189,7 @@ mobileViewport.addEventListener('change', event => {
   if (!event.matches) setMobileMenu(false);
 });
 
-function createCarousel({ container, controls, cardSelector, directionAttribute, indicatorSelector, isEnabled, pageSize }) {
+function createCarousel({ container, controls, cardSelector, directionAttribute, indicatorSelector, isEnabled, pageSize, isAnimated = () => true }) {
   if (!container || !controls) return;
 
   const cards = [...container.querySelectorAll(cardSelector)];
@@ -200,6 +200,7 @@ function createCarousel({ container, controls, cardSelector, directionAttribute,
   let trailingClones = [];
   let clonesInstalled = false;
   let installedPageSize = 0;
+  let installedPageWidth = 0;
   let scrollFrame;
   let loopTimer;
 
@@ -245,10 +246,11 @@ function createCarousel({ container, controls, cardSelector, directionAttribute,
     trailingClones = [];
     clonesInstalled = false;
     installedPageSize = 0;
+    installedPageWidth = 0;
     container.scrollLeft = 0;
   };
 
-  const installClones = () => {
+  const installClones = (startIndex = 0) => {
     const size = visiblePageSize();
     leadingClones = cards.slice(-size).map(prepareClone);
     trailingClones = cards.slice(0, size).map(prepareClone);
@@ -256,12 +258,13 @@ function createCarousel({ container, controls, cardSelector, directionAttribute,
     container.append(...trailingClones);
     clonesInstalled = true;
     installedPageSize = size;
+    installedPageWidth = pageWidth();
     requestAnimationFrame(() => {
-      jumpTo(pageWidth());
+      jumpTo((Math.floor(startIndex / size) + 1) * pageWidth());
       updateControls();
       window.setTimeout(() => {
         if (!clonesInstalled || !isEnabled()) return;
-        jumpTo(pageWidth());
+        jumpTo((Math.floor(startIndex / size) + 1) * pageWidth());
         updateControls();
       }, 250);
     });
@@ -273,12 +276,13 @@ function createCarousel({ container, controls, cardSelector, directionAttribute,
       updateControls();
       return;
     }
-    if (clonesInstalled && installedPageSize === visiblePageSize()) {
+    if (clonesInstalled && installedPageSize === visiblePageSize() && installedPageWidth === pageWidth()) {
       updateControls();
       return;
     }
+    const startIndex = clonesInstalled ? activeIndex() : 0;
     removeClones();
-    installClones();
+    installClones(startIndex);
   };
 
   const normalizeLoop = () => {
@@ -291,9 +295,15 @@ function createCarousel({ container, controls, cardSelector, directionAttribute,
 
   const move = direction => {
     if (!isEnabled()) return;
+    const target = (rawPage() + direction) * pageWidth();
+    if (reducedMotion.matches || !isAnimated()) {
+      jumpTo(target);
+      normalizeLoop();
+      return;
+    }
     container.scrollTo({
-      left: (rawPage() + direction) * pageWidth(),
-      behavior: reducedMotion.matches ? 'auto' : 'smooth'
+      left: target,
+      behavior: 'smooth'
     });
   };
 
@@ -319,7 +329,8 @@ createCarousel({
   directionAttribute: 'data-project-direction',
   indicatorSelector: '.project-carousel-indicator',
   isEnabled: () => true,
-  pageSize: () => mobileViewport.matches ? 1 : 2
+  pageSize: () => 1,
+  isAnimated: () => mobileViewport.matches
 });
 
 createCarousel({
