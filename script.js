@@ -20,7 +20,7 @@ themeToggles.forEach(toggle => {
   toggle.addEventListener('click', () => setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
 });
 
-const ctaSelector = '.pill, .project-carousel-control, .back-to-top, .menu-toggle, .menu-close';
+const ctaSelector = '.pill, .project-carousel-control, .menu-toggle, .menu-close';
 const hoverSweepSelector = '.pill';
 const ctaSvgNamespace = 'http://www.w3.org/2000/svg';
 

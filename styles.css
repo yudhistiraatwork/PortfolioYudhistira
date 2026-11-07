@@ -2,6 +2,8 @@
   --bg: #1a1a1a;
   --ink: #fff;
   --line: #414141;
+  --ghost-fill: #383838;
+  --ghost-hover: #4d4d4d;
   --serif: "Cormorant Garamond", Georgia, serif;
 }
 
@@ -9,6 +11,8 @@ body[data-theme="light"] {
   --bg: #fff;
   --ink: #2a2a2a;
   --line: #d9d9d9;
+  --ghost-fill: #b8b8b8;
+  --ghost-hover: #a4a4a4;
 }
 
 * {
@@ -153,10 +157,6 @@ button {
 .back-to-top img {
   width: 24px;
   height: 24px;
-}
-
-body[data-theme="light"] .back-to-top img {
-  filter: invert(1);
 }
 
 .back-to-top:hover {
@@ -667,7 +667,7 @@ body[data-theme="light"] .bobo {
   isolation: isolate;
 }
 
-.pill, .project-carousel-control, .back-to-top {
+.pill, .project-carousel-control {
   --cta-radius: 12px;
   --cta-fill: var(--ink);
   --cta-sweep-fill: var(--bg);
@@ -682,7 +682,7 @@ body[data-theme="light"] .bobo {
   --cta-sweep-fill: transparent;
 }
 
-.pill.cta-framed, .project-carousel-control.cta-framed, .back-to-top.cta-framed {
+.pill.cta-framed, .project-carousel-control.cta-framed {
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -728,6 +728,81 @@ body[data-theme="light"] .bobo {
 .pill {
   --cta-fill: var(--bg);
   --cta-sweep-fill: var(--ink);
+}
+
+/* Button states: secondary is the outline default; primary is a filled CTA. */
+.pill.button--primary {
+  --cta-fill: var(--ink);
+  --cta-sweep-fill: var(--bg);
+  color: var(--bg);
+}
+
+.pill.button--primary:hover,
+.pill.button--primary.cta-sweep-active {
+  color: var(--ink);
+}
+
+.pill.button--primary.cta-sweep-leaving {
+  color: var(--bg);
+}
+
+.pill.button--hidden {
+  display: none;
+}
+
+body[data-theme="dark"] .pill.button--primary img {
+  filter: none;
+}
+
+body[data-theme="light"] .pill.button--primary img {
+  filter: invert(1);
+}
+
+body[data-theme="dark"] .pill.button--primary:hover img,
+body[data-theme="dark"] .pill.button--primary.cta-sweep-active img {
+  filter: invert(1);
+}
+
+body[data-theme="dark"] .pill.button--primary.cta-sweep-leaving img {
+  filter: none;
+}
+
+body[data-theme="light"] .pill.button--primary:hover img,
+body[data-theme="light"] .pill.button--primary.cta-sweep-active img {
+  filter: none;
+}
+
+body[data-theme="light"] .pill.button--primary.cta-sweep-leaving img {
+  filter: invert(1);
+}
+
+.button--ghost {
+  --ghost-chamfer: 12px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--ghost-fill);
+  clip-path: polygon(
+    var(--ghost-chamfer) 0,
+    100% 0,
+    100% calc(100% - var(--ghost-chamfer)),
+    calc(100% - var(--ghost-chamfer)) 100%,
+    0 100%,
+    0 var(--ghost-chamfer)
+  );
+  color: var(--ink);
+  transition: opacity .2s ease, transform .2s ease, visibility 0s linear .2s, background .2s ease;
+}
+
+.button--ghost:hover {
+  background: var(--ghost-hover);
+}
+
+body[data-theme="dark"] .button--ghost img {
+  filter: invert(1);
+}
+
+body[data-theme="light"] .button--ghost img {
+  filter: none;
 }
 
 .pill:hover .cta-sweep,

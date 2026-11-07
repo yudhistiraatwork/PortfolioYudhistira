@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=carousel-controls-4" />
+    <link rel="stylesheet" href="styles.css?v=button-states-3" />
   </head>
   <body class="about-page" data-theme="dark">
     <a class="skip-link" href="#main">Skip to content</a>
@@ -49,7 +49,7 @@
         <div class="about-profile__copy">
           <h2 id="small-things-title">What panel lines taught me</h2>
           <p>Panel lines are the tiny grooves that make a model look finished, and nobody notices them until they’re missing. Products work the same way: a default, a label, a half-second of friction. I started in code and stayed for the people, so I design the details nobody thanks you for and everybody feels every day.</p>
-          <a class="pill" href="index.html#contact">View Linkedin <img src="Assets/Icons/arrow-right.svg" alt="" width="24" height="24" /></a>
+          <a class="pill button--hidden" href="index.html#contact">View Linkedin <img src="Assets/Icons/arrow-right.svg" alt="" width="24" height="24" /></a>
         </div>
         <img class="about-profile__photo" src="Assets/PersonalPhoto/Professional.png" alt="Portrait of Yudhistira Eka Paksi Muhammad" width="1024" height="1536" />
       </section>
@@ -59,7 +59,7 @@
           <img class="theme-asset about-section-icon" src="Assets/Illustrations/DarkMode/Pencils.svg" data-dark="Assets/Illustrations/DarkMode/Pencils.svg" data-light="Assets/Illustrations/LightMode/Pencils.svg" alt="" width="72" height="72" />
           <h2>On the workbench</h2>
           <p>I ask a lot of questions, because the real problem is rarely the one in the brief. Then I sketch, wireframe, polish, and test fit with real people before anything gets glued down.</p>
-          <a class="pill" href="index.html#contact">View linkedin <img src="Assets/Icons/arrow-right.svg" alt="" width="24" height="24" /></a>
+          <a class="pill" data-button-state="primary" href="index.html#projects">Recent Projects <img src="Assets/Icons/arrow-right.svg" alt="" width="24" height="24" /></a>
         </article>
         <article class="about-workbench-card">
           <img class="theme-asset about-section-icon" src="Assets/Illustrations/DarkMode/MakingModels.svg" data-dark="Assets/Illustrations/DarkMode/MakingModels.svg" data-light="Assets/Illustrations/LightMode/MakingModels.svg" alt="" width="72" height="72" />
@@ -144,7 +144,7 @@
           <img class="theme-asset about-contact-option__icon" src="Assets/Illustrations/DarkMode/SketchMail.svg" data-dark="Assets/Illustrations/DarkMode/SketchMail.svg" data-light="Assets/Illustrations/LightMode/SketchMail.svg" alt="" width="72" height="72" />
           <h2>Email</h2>
           <p>For the full brief, with all the details, context, and deadlines.</p>
-          <a class="pill" href="mailto:yudhistirae12@gmail.com">Send an email <img src="Assets/Icons/arrow-right.svg" alt="" width="24" height="24" /></a>
+          <a class="pill" data-button-state="primary" href="mailto:yudhistirae12@gmail.com">Send an email <img src="Assets/Icons/arrow-right.svg" alt="" width="24" height="24" /></a>
         </article>
         <article class="about-contact-option">
           <img class="theme-asset about-contact-option__icon" src="Assets/Illustrations/DarkMode/SketchWA.svg" data-dark="Assets/Illustrations/DarkMode/SketchWA.svg" data-light="Assets/Illustrations/LightMode/SketchWA.svg" alt="" width="72" height="72" />
@@ -155,7 +155,7 @@
       </section>
     </main>
 
-    <button class="back-to-top" type="button" aria-label="Back to top"><img src="Assets/Icons/arrow-up.svg" alt="" width="24" height="24" /></button>
-    <script src="script.js?v=cta-sweep-6"></script>
+    <button class="back-to-top button--ghost" type="button" aria-label="Back to top"><img src="Assets/Icons/arrow-up.svg" alt="" width="24" height="24" /></button>
+    <script src="script.js?v=button-states-3"></script>
   </body>
 </html>
