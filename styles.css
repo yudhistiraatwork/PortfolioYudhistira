@@ -379,7 +379,7 @@ h2, h3, p {
 .value-intro, .projects-intro {
   width: 960px;
   max-width: 100%;
-  padding: 120px 0 40px 40px;
+  padding: 200px 0 40px 40px;
 }
 
 .value-intro__icon, .projects-intro__icon {
@@ -408,6 +408,13 @@ h2, h3, p {
   font-size: 32px;
   font-weight: 400;
   line-height: 1.3;
+}
+
+/* Section captions are temporarily hidden while the headings carry the narrative. */
+.value-intro > p,
+.projects-intro > p,
+.about-experience__intro > p {
+  display: none;
 }
 
 .value-grid {
@@ -1006,18 +1013,21 @@ body[data-theme="dark"] .project-carousel-control img {
   border-bottom: 1px solid var(--line);
 }
 
-.about-intro h1, .about-experience__intro {
+.about-intro h1, .about-experience__intro, .about-contact__intro {
   width: 960px;
   max-width: 100%;
   margin: 0;
-  padding: 120px 0 40px 40px;
 }
 
 .about-intro h1 {
-  padding-bottom: 80px;
+  padding: 120px 0 80px 40px;
 }
 
-.about-intro h1, .about-experience__intro h2 {
+.about-experience__intro, .about-contact__intro {
+  padding: 200px 0 40px 40px;
+}
+
+.about-intro h1, .about-experience__intro h2, .about-contact__intro h2 {
   color: var(--ink);
   font-size: 64px;
   font-weight: 500;
@@ -1127,7 +1137,7 @@ body[data-theme="dark"] .project-carousel-control img {
   object-fit: contain;
 }
 
-.about-experience__intro h2 {
+.about-experience__intro h2, .about-contact__intro h2 {
   margin: 0 0 20px;
 }
 
@@ -1230,6 +1240,7 @@ body[data-theme="dark"] .project-carousel-control img {
 .about-contact-options {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
 }
 
 .about-contact-option {
@@ -1264,12 +1275,12 @@ body[data-theme="dark"] .project-carousel-control img {
     padding: 56px 40px;
   }
 
-  .about-intro h1, .about-experience__intro {
+  .about-intro h1, .about-experience__intro, .about-contact__intro {
     width: auto;
     padding: 80px 40px 40px;
   }
 
-  .about-intro h1, .about-experience__intro h2 {
+  .about-intro h1, .about-experience__intro h2, .about-contact__intro h2 {
     font-size: 56px;
   }
 
@@ -1664,12 +1675,12 @@ body[data-theme="dark"] .project-carousel-control img {
     font-size: 20px;
   }
 
-  .about-intro h1, .about-experience__intro {
+  .about-intro h1, .about-experience__intro, .about-contact__intro {
     width: auto;
     padding: 80px 20px 40px;
   }
 
-  .about-intro h1, .about-experience__intro h2 {
+  .about-intro h1, .about-experience__intro h2, .about-contact__intro h2 {
     font-size: 42px;
     letter-spacing: -1.6px;
     line-height: 1.1;
@@ -1755,7 +1766,7 @@ body[data-theme="dark"] .project-carousel-control img {
     margin-bottom: 20px;
   }
 
-  .about-experience__intro {
+  .about-experience__intro, .about-contact__intro {
     padding-bottom: 20px;
   }
 
